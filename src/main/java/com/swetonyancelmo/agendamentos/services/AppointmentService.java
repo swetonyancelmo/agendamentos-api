@@ -8,11 +8,13 @@ import com.swetonyancelmo.agendamentos.repositories.AppointmentRepository;
 import com.swetonyancelmo.agendamentos.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +45,7 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Appointment createAppointment(AppointmentRequestDto dto) {
         List<LocalTime> availableSlots = getAvailableSlots(dto.appointmentDate());
         if(!availableSlots.contains(dto.appointmentTime())) {
@@ -65,6 +68,27 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.PENDING);
 
         return appointmentRepository.save(appointment);
+    }
+
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
+    }
+
+    @Transactional
+    public Appointment updateAppointmentStatus(UUID id, AppointmentStatus newStatus) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+
+        appointment.setStatus(newStatus);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        if(newStatus == AppointmentStatus.CONFIRMED) {
+            // Simula envio de mensagem para o cliente pelo Whatsapp (por enquanto)
+            System.out.println("Notificação: O agendamento para " + appointment.getCustomer().getName() + " no dia " +
+                    appointment.getAppointmentDate() + " às " + appointment.getAppointmentTime() + " foi confirmado.");
+        }
+
+        return savedAppointment;
     }
 
 }
