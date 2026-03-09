@@ -1,3 +1,6 @@
+jwt:
+  secret: ${JWT_SECRET:chave-secreta-desenvolvimento-nao-usar-em-producao} # Vamos mudar ela em perfil de PROD
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/agendamento_db
