@@ -38,10 +38,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CustomerRuleException.class)
-    public ResponseEntity<ErrorResponseDto> handleCustomerRule(CustomerRuleException ex){
+    public ResponseEntity<ErrorResponseDto> handleCustomerRule(CustomerRuleException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponseDto(ex.getMessage()));
+    }
       
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleValidation(MethodArgumentNotValidException ex) {
