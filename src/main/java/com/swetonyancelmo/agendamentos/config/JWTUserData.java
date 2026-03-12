@@ -6,7 +6,8 @@ import java.util.UUID;
 
 @Builder
 public record JWTUserData(
-        UUID businessId,
-        String email
+        UUID userId,
+        String email,
+        String role
 ) {
 }

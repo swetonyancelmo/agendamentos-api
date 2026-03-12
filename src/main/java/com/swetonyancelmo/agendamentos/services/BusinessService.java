@@ -5,6 +5,7 @@ import com.swetonyancelmo.agendamentos.dtos.response.BusinessDto;
 import com.swetonyancelmo.agendamentos.exceptions.BusinessRuleException;
 import com.swetonyancelmo.agendamentos.mapper.BusinessMapper;
 import com.swetonyancelmo.agendamentos.models.Business;
+import com.swetonyancelmo.agendamentos.models.Role;
 import com.swetonyancelmo.agendamentos.repositories.BusinessRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class BusinessService {
         business.setPhone(dto.phone());
         business.setEmail(dto.email());
         business.setPassword(passwordEncoder.encode(dto.password()));
+        business.setRole(Role.ROLE_BUSINESS);
 
         Business savedBusiness = businessRepository.save(business);
         return businessMapper.toDto(savedBusiness);
