@@ -15,8 +15,3 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  security:
-    user:
-      name: tecnico
-      password: senha_super_segura_123 # Podemos mudar depois
