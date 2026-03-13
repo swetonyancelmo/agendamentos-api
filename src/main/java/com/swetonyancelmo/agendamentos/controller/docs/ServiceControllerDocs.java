@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,4 +50,17 @@ public interface ServiceControllerDocs {
     })
     ResponseEntity<List<ServiceDto>> getAllServices();
 
+    @Operation(summary = "Retorna Serviços", description = "Retorna todos os serviço de uma empresa")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Serviços retornados com sucesso",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ServiceDto.class))),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    ResponseEntity<List<ServiceDto>> getServicesByBusinessId(UUID businessId);
 }

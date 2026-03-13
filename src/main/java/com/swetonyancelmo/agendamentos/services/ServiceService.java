@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ServiceService {
@@ -24,6 +25,13 @@ public class ServiceService {
     @Transactional(readOnly = true)
     public List<ServiceDto> listAllServices() {
         return serviceRepository.findAll().stream()
+                .map(serviceMapper::toDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ServiceDto> findServiceByBusiness(UUID businessId){
+        return serviceRepository.findByBusinessId(businessId).stream()
                 .map(serviceMapper::toDto)
                 .toList();
     }
