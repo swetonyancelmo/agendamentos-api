@@ -18,7 +18,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +39,6 @@ public class AuthController implements AuthControllerDocs {
     }
 
     @Override
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS')")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BusinessDto> create(@Valid @RequestBody CreateBusinessDto dto) {
         BusinessDto createdBusiness = businessService.createBusiness(dto);
@@ -48,7 +46,6 @@ public class AuthController implements AuthControllerDocs {
     }
 
     @Override
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS')")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginDto> login(@Valid @RequestBody BusinessLoginDto dto) {
         LoginDto loginResponse = authService.businessLogin(dto);
@@ -57,7 +54,6 @@ public class AuthController implements AuthControllerDocs {
 
     @Operation(summary = "Registrar cliente", description = "Cadastra um novo cliente no sistema")
     @SecurityRequirements
-    @PreAuthorize("hasAnyRole('ROLE_CUSTOMER')")
     @PostMapping(value = "/customer/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerDto> createCustomer(@Valid @RequestBody CreateCustomerDto dto) {
         CustomerDto createdCustomer = customerService.create(dto);
@@ -66,7 +62,6 @@ public class AuthController implements AuthControllerDocs {
 
     @Operation(summary = "Login de cliente", description = "Autentica o cliente e retorna o token JWT")
     @SecurityRequirements
-    @PreAuthorize("hasAnyRole('ROLE_CUSTOMER')")
     @PostMapping(value = "/customer/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginDto> customerLogin(@Valid @RequestBody CustomerLoginDto dto) {
         LoginDto loginResponse = authService.customerLogin(dto);
