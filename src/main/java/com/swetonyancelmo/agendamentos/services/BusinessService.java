@@ -7,6 +7,9 @@ import com.swetonyancelmo.agendamentos.mapper.BusinessMapper;
 import com.swetonyancelmo.agendamentos.models.Business;
 import com.swetonyancelmo.agendamentos.models.Role;
 import com.swetonyancelmo.agendamentos.repositories.BusinessRepository;
+
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +42,13 @@ public class BusinessService {
 
         Business savedBusiness = businessRepository.save(business);
         return businessMapper.toDto(savedBusiness);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BusinessDto> listAllBusinesses() {
+        return businessRepository.findAll().stream()
+            .map(businessMapper::toDto)
+            .toList();
     }
 
 }
