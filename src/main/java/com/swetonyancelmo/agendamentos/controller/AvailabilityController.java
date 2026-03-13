@@ -1,40 +1,52 @@
 package com.swetonyancelmo.agendamentos.controller;
 
+import com.swetonyancelmo.agendamentos.controller.docs.AvailabilityControllerDocs;
 import com.swetonyancelmo.agendamentos.dtos.request.AvailabilityRequestDto;
 import com.swetonyancelmo.agendamentos.dtos.response.AvailabilityResponseDto;
+import com.swetonyancelmo.agendamentos.models.Business;
 import com.swetonyancelmo.agendamentos.services.AvailabilityService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/business/{business}/availability")
+@RequestMapping("/api/business")
 @Tag(name = "Availability", description = "Gestão de horários da empresa")
-@RequiredArgsConstructor
-public class AvailabilityController {
+public class AvailabilityController implements AvailabilityControllerDocs {
 
     private final AvailabilityService service;
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<AvailabilityResponseDto> create(@PathVariable UUID businessId,
-                                                          @RequestBody @Valid AvailabilityRequestDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(businessId, dto));
+    public AvailabilityController(AvailabilityService service) {
+        this.service = service;
     }
 
-    @GetMapping(value = "/list")
-    public ResponseEntity<List<AvailabilityResponseDto>> findAll(@PathVariable UUID businessId) {
+    @PostMapping("/availability")
+    @PreAuthorize("hasAnyRole('ROLE_BUSINESS')")
+    @Override
+    public ResponseEntity<AvailabilityResponseDto> create(@RequestBody @Valid AvailabilityRequestDto dto,
+                                                          @AuthenticationPrincipal Business businessLogged) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(businessLogged, dto));
+    }
+
+    @GetMapping("/availability/{businessId}")
+    @PreAuthorize("hasAnyRole('ROLE_BUSINESS', 'ROLE_CUSTOMER')")
+    @Override
+    public ResponseEntity<List<AvailabilityResponseDto>> findAllByBusiness(@PathVariable UUID businessId) {
         return ResponseEntity.ok(service.findAllByBusiness(businessId));
     }
 
-    @DeleteMapping("/delete/{availabilityId}")
+    @DeleteMapping("/availability/{availabilityId}")
+    @PreAuthorize("hasAnyRole('ROLE_BUSINESS')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID availabilityId) {
-        service.delete(availabilityId);
+    @Override
+    public void delete(@PathVariable UUID availabilityId, @AuthenticationPrincipal Business businessLogged) {
+        service.delete(availabilityId, businessLogged);
     }
 }
