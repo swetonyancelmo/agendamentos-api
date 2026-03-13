@@ -11,6 +11,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,4 +35,32 @@ public interface ServiceControllerDocs {
                             schema = @Schema(implementation = ErrorResponseDto.class)))
     })
     ResponseEntity<ServiceDto> createService(@RequestBody @Valid CreateServiceDto dto, @Parameter(hidden = true) @AuthenticationPrincipal Business businessLogged);
+
+    @Operation(summary = "Retorna Serviços", description = "Retorna todos os serviços")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Serviços retornados com sucesso",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ServiceDto.class))),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    ResponseEntity<List<ServiceDto>> getAllServices();
+
+    @Operation(summary = "Retorna Serviços", description = "Retorna todos os serviço de uma empresa")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Serviços retornados com sucesso",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ServiceDto.class))),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    ResponseEntity<List<ServiceDto>> getServicesByBusinessId(UUID businessId);
 }
