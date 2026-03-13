@@ -8,5 +8,6 @@ public record AvailabilityResponseDto(
         UUID id,
         DayOfWeek dayOfWeek,
         LocalTime startTime,
-        LocalTime endTime
+        LocalTime endTime,
+        UUID businessId
 ) {}
