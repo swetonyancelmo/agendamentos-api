@@ -2,6 +2,7 @@ package com.swetonyancelmo.agendamentos.services;
 
 import com.swetonyancelmo.agendamentos.dtos.request.CreateAppointmentDto;
 import com.swetonyancelmo.agendamentos.dtos.response.AppointmentDto;
+import com.swetonyancelmo.agendamentos.exceptions.BusinessRuleException;
 import com.swetonyancelmo.agendamentos.mapper.AppointmentMapper;
 import com.swetonyancelmo.agendamentos.models.Appointment;
 import com.swetonyancelmo.agendamentos.models.Business;
@@ -67,7 +68,7 @@ public class AppointmentService {
                 );
 
         if (!conflicts.isEmpty()) {
-            throw new RuntimeException("Horário já reservado");
+            throw new BusinessRuleException("Horário já reservado");
         }
 
         Appointment appointment = new Appointment();
