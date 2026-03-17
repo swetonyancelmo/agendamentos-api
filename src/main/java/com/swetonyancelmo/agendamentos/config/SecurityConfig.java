@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/business/availability/*").hasAnyRole("BUSINESS", "CUSTOMER")
                         .requestMatchers(HttpMethod.GET, "/api/business").hasAnyRole("BUSINESS", "CUSTOMER")
                         .requestMatchers("/api/business/**").hasRole("BUSINESS")
+                        .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(this::unauthorizedEntryPoint))
