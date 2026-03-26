@@ -28,7 +28,7 @@ public class AvailabilityController implements AvailabilityControllerDocs {
     }
 
     @PostMapping("/availability")
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS')")
+    @PreAuthorize("hasAnyRole('BUSINESS')")
     @Override
     public ResponseEntity<AvailabilityResponseDto> create(@RequestBody @Valid AvailabilityRequestDto dto,
                                                           @AuthenticationPrincipal Business businessLogged) {
@@ -36,14 +36,14 @@ public class AvailabilityController implements AvailabilityControllerDocs {
     }
 
     @GetMapping("/availability/{businessId}")
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS', 'ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyRole('BUSINESS', 'CUSTOMER')")
     @Override
     public ResponseEntity<List<AvailabilityResponseDto>> findAllByBusiness(@PathVariable UUID businessId) {
         return ResponseEntity.ok(service.findAllByBusiness(businessId));
     }
 
     @DeleteMapping("/availability/{availabilityId}")
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS')")
+    @PreAuthorize("hasAnyRole('BUSINESS')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
     public void delete(@PathVariable UUID availabilityId, @AuthenticationPrincipal Business businessLogged) {

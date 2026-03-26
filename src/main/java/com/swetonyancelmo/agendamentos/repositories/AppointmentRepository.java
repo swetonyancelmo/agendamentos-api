@@ -2,6 +2,7 @@ package com.swetonyancelmo.agendamentos.repositories;
 
 import com.swetonyancelmo.agendamentos.models.Appointment;
 import com.swetonyancelmo.agendamentos.models.Customer;
+import com.swetonyancelmo.agendamentos.models.enums.AppointmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,6 +25,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             LocalDate endDate
     );
 
+    List<Appointment> findByBusinessIdAndAppointmentDateBetweenAndStatus(
+            UUID businessId,
+            LocalDate startDate,
+            LocalDate endDate,
+            AppointmentStatus status
+    );
 
     @Query("""
         SELECT a FROM Appointment a
@@ -31,6 +38,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
         AND a.appointmentDate = :date
         AND a.startTime < :endTime
         AND a.endTime > :startTime
+        AND a.status IN ('PENDING', 'CONFIRMED')
     """)
     List<Appointment> findConflictingAppointments(
             UUID businessId,

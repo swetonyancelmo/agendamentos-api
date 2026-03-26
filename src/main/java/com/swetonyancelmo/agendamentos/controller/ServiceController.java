@@ -34,7 +34,7 @@ public class ServiceController implements ServiceControllerDocs {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS')")
+    @PreAuthorize("hasAnyRole('BUSINESS')")
     @Override
     public ResponseEntity<ServiceDto> createService(@RequestBody @Valid CreateServiceDto dto, @AuthenticationPrincipal Business businessLogged) {
         ServiceDto createdService = service.createService(dto, businessLogged);
@@ -42,14 +42,14 @@ public class ServiceController implements ServiceControllerDocs {
     }
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS')")
+    @PreAuthorize("hasAnyRole('BUSINESS')")
     @Override
     public ResponseEntity<List<ServiceDto>> getAllServices(){
         return ResponseEntity.ok(service.listAllServices());
     }
 
     @GetMapping("/{businessId}")
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS', 'ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyRole('BUSINESS', 'CUSTOMER')")
     @Override
     public ResponseEntity<List<ServiceDto>> getServicesByBusinessId(@PathVariable UUID businessId){
         return ResponseEntity.ok(service.findServiceByBusiness(businessId));

@@ -27,7 +27,7 @@ public class BusinessController implements BusinessControllerDocs {
 
     @GetMapping
     @Override
-    @PreAuthorize("hasAnyRole('ROLE_BUSINESS', 'ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyRole('BUSINESS', 'CUSTOMER')")
     public ResponseEntity<List<BusinessDto>> listAllBusinesses() {
         return ResponseEntity.ok(businessService.listAllBusinesses());
     }
