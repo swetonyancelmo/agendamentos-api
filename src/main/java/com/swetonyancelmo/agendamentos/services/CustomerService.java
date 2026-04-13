@@ -48,13 +48,13 @@ public class CustomerService {
 
     @Transactional(readOnly = true)
     public List<CustomerDto> findAllCustomerByStatusCompleted() {
-        return appointmentRepository.findAllCompletedAppointments().stream()
-                .map(appointment -> new CustomerDto(
-                        appointment.getCustomer().getId(),
-                        appointment.getCustomer().getName(),
-                        appointment.getCustomer().getPhone(),
-                        appointment.getCustomer().getEmail()
-                        ))
+        return appointmentRepository.findDistinctCustomersWithCompletedAppointments().stream()
+                .map(customer -> new CustomerDto(
+                        customer.getId(),
+                        customer.getName(),
+                        customer.getPhone(),
+                        customer.getEmail()
+                ))
                 .toList();
     }
 

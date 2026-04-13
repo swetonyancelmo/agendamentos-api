@@ -52,4 +52,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
         WHERE a.status = 'COMPLETED'            \s
    \s""")
     List<Appointment> findAllCompletedAppointments();
+
+    @Query("SELECT DISTINCT a.customer FROM Appointment a WHERE a.status = 'COMPLETED'")
+    List<Customer> findDistinctCustomersWithCompletedAppointments();
 }
