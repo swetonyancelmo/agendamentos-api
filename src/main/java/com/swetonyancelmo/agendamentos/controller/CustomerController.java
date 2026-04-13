@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/business")
+@RequestMapping("/api/customers")
 @Tag(name = "Customers", description = "Endpoints para gerenciamento dos Customers")
 public class CustomerController implements CustomerControllerDocs {
 
@@ -22,7 +22,7 @@ public class CustomerController implements CustomerControllerDocs {
         this.customerService = customerService;
     }
 
-    @GetMapping
+    @GetMapping()
     @Override
     public ResponseEntity<List<CustomerDto>> getAllCustomerByStatusCompleted() {
         return ResponseEntity.ok(customerService.findAllCustomerByStatusCompleted());
