@@ -6,10 +6,14 @@ import com.swetonyancelmo.agendamentos.exceptions.CustomerRuleException;
 import com.swetonyancelmo.agendamentos.mapper.CustomerMapper;
 import com.swetonyancelmo.agendamentos.models.Customer;
 import com.swetonyancelmo.agendamentos.models.Role;
+import com.swetonyancelmo.agendamentos.repositories.AppointmentRepository;
 import com.swetonyancelmo.agendamentos.repositories.CustomerRepository;
-import jakarta.transaction.Transactional;
+
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CustomerService {
@@ -17,11 +21,13 @@ public class CustomerService {
     private final CustomerRepository repository;
     private final CustomerMapper mapper;
     private final PasswordEncoder passwordEncoder;
+    private final AppointmentRepository appointmentRepository;
 
-    public CustomerService(CustomerRepository repository, CustomerMapper mapper, PasswordEncoder passwordEncoder) {
+    public CustomerService(CustomerRepository repository, CustomerMapper mapper, PasswordEncoder passwordEncoder, AppointmentRepository appointmentRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
+        this.appointmentRepository = appointmentRepository;
     }
 
     @Transactional
@@ -38,6 +44,18 @@ public class CustomerService {
         customer.setRole(Role.ROLE_CUSTOMER);
 
         return mapper.toDto(repository.save(customer));
+    }
+
+    @Transactional(readOnly = true)
+    public List<CustomerDto> findAllCustomerByStatusCompleted() {
+        return appointmentRepository.findAllCompletedAppointments().stream()
+                .map(appointment -> new CustomerDto(
+                        appointment.getCustomer().getId(),
+                        appointment.getCustomer().getName(),
+                        appointment.getCustomer().getPhone(),
+                        appointment.getCustomer().getEmail()
+                        ))
+                .toList();
     }
 
 }

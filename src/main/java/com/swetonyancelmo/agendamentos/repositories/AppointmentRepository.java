@@ -46,4 +46,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             LocalTime startTime,
             LocalTime endTime
     );
+
+    @Query("""
+        SELECT a FROM Appointment a
+        WHERE a.status = 'COMPLETED'            \s
+   \s""")
+    List<Appointment> findAllCompletedAppointments();
 }
