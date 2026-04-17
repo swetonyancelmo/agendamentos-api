@@ -2,12 +2,12 @@ package com.swetonyancelmo.agendamentos.dtos.request;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record AvailabilityRequestDto(
-        @NotNull(message = "O dia da semana é obrigatório")
-        DayOfWeek dayOfWeek,
+        @NotNull(message = "A data é obrigatória")
+        LocalDate date,
 
         @NotNull(message = "O horário de início é obrigatório")
         LocalTime startTime,

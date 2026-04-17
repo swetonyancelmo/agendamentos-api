@@ -106,11 +106,11 @@ public class AppointmentService {
             LocalTime endTime
     ) {
         List<Availability> daySlots = availabilityRepository.findAllByBusinessId(businessId).stream()
-                .filter(a -> a.getDayOfWeek().equals(appointmentDate.getDayOfWeek()))
+                .filter(a -> a.getDate().equals(appointmentDate))
                 .toList();
 
         if (daySlots.isEmpty()) {
-            throw new BusinessRuleException("Não há disponibilidade cadastrada para este dia da semana");
+            throw new BusinessRuleException("Não há disponibilidade cadastrada para esta data");
         }
 
         boolean fits = daySlots.stream().anyMatch(a ->
