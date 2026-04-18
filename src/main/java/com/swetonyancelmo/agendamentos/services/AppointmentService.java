@@ -15,6 +15,7 @@ import com.swetonyancelmo.agendamentos.repositories.AvailabilityRepository;
 import com.swetonyancelmo.agendamentos.repositories.BusinessRepository;
 import com.swetonyancelmo.agendamentos.repositories.ServiceRepository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -32,19 +33,22 @@ public class AppointmentService {
     private final BusinessRepository businessRepository;
     private final AvailabilityRepository availabilityRepository;
     private final AppointmentMapper mapper;
+    private final EmailService emailService;
 
     public AppointmentService(
             AppointmentRepository appointmentRepository,
             ServiceRepository serviceRepository,
             BusinessRepository businessRepository,
             AvailabilityRepository availabilityRepository,
-            AppointmentMapper mapper
+            AppointmentMapper mapper,
+            EmailService emailService
     ) {
         this.appointmentRepository = appointmentRepository;
         this.serviceRepository = serviceRepository;
         this.businessRepository = businessRepository;
         this.availabilityRepository = availabilityRepository;
         this.mapper = mapper;
+        this.emailService = emailService;
     }
 
     public AppointmentDto createAppointment(CreateAppointmentDto dto) {
@@ -157,6 +161,7 @@ public class AppointmentService {
         return list.stream().map(mapper::toDto).toList();
     }
 
+    @Transactional
     public AppointmentDto updateStatusByBusiness(UUID appointmentId, UpdateAppointmentStatusDto dto) {
         Business business = (Business) SecurityContextHolder
                 .getContext()
@@ -185,7 +190,13 @@ public class AppointmentService {
             appointment.setRejectionReason(null);
         }
 
-        return mapper.toDto(appointmentRepository.save(appointment));
+        Appointment saved = appointmentRepository.save(appointment);
+
+        if (dto.getStatus() == AppointmentStatus.CONFIRMED) {
+            emailService.sendConfirmationEmail(saved);
+        }
+
+        return mapper.toDto(saved);
     }
 
     public AppointmentDto cancelByCustomer(UUID appointmentId) {
