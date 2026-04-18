@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: agendamentos-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: agendamentos-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: agendamentos-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: agendamentos-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: agendamentos-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: agendamentos-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+
+databases:
+  - name: agendamentos-db
+    plan: free
+    databaseName: agendamentos_db
+    user: agendamentos_user
