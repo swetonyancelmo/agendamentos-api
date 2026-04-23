@@ -11,6 +11,7 @@ public class AppointmentMapper {
         return new AppointmentDto(
                 appointment.getId(),
                 appointment.getService().getServiceName(),
+                appointment.getService().getPrice(),
                 appointment.getAppointmentDate(),
                 appointment.getStartTime(),
                 appointment.getEndTime(),
